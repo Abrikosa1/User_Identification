@@ -41,49 +41,10 @@ import sun.misc.BASE64Decoder;
  */
 public class recognizer {
 
-    public static int train(String img,String login) throws IOException {
-        String trainingDir = "C:\\trainingImages";
+    public static int recognize(String img,String login) throws IOException {
         BufferedImage bi = String2BufferedImage(img);
         cutter.detect(bi, login);
-        //ImageIO.write(bi,"png",new File("C://testImg//"+login+".png"));
         Mat testImage = imread("C:\\testImg\\"+login+".png",CV_LOAD_IMAGE_GRAYSCALE);
-//if ((new File("trainingImages")).exists()) {
-//	System.out.println("\ngood");
-//} else {
-//	System.out.println("\nBad");
-//}
-/*
-        File root = new File(trainingDir);
-
-        FilenameFilter imgFilter = new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                name = name.toLowerCase();
-                return name.endsWith(".jpg") || name.endsWith(".pgm") || name.endsWith(".png");
-            }
-        };
-
-        File[] imageFiles = root.listFiles(imgFilter);
-
-        MatVector images = new MatVector(imageFiles.length);
-
-        Mat labels = new Mat(imageFiles.length, 1, CV_32SC1);
-        IntBuffer labelsBuf = labels.createBuffer();
-
-        int counter = 0;
-
-        for (File image : imageFiles) {
-            Mat matImg = imread(image.getAbsolutePath(),CV_LOAD_IMAGE_GRAYSCALE);
-//, CV_LOAD_IMAGE_GRAYSCALE
-            int label = Integer.parseInt(image.getName().split("\\-")[0]);
-            System.out.println(label + "gg" + image);
-            images.put(counter, matImg);
-            labelsBuf.put(counter, label);
-
-            counter++;
-        }
-*/
-        //FaceRecognizer faceRecognizer = FisherFaceRecognizer.create();
-        // FaceRecognizer faceRecognizer = EigenFaceRecognizer.create();
         FaceRecognizer faceRecognizer = LBPHFaceRecognizer.create();
         //System.out.println(images);
         //faceRecognizer.train(images, labels);

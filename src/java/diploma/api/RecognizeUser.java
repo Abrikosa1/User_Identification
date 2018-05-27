@@ -55,7 +55,7 @@ public class RecognizeUser extends HttpServlet {
             String image = (String) jsonObj.get("image");
             String login = (String) jsonObj.get("login");
             int id = (int) jsonObj.get("id");
-            int recId = recognizer.train(image,login);
+            int recId = recognizer.recognize(image,login);
             out.println(recId);
         }
     }

@@ -30,18 +30,8 @@ import org.bytedeco.javacpp.opencv_core.MatVector;
  */
 public class updater {
     public static void updateRec(){
-        long startTime = System.currentTimeMillis();
-//        String s1= "C:\\trainingImages";
-//                String s2 ="C:\\1-denis1.png";
-                
+        long startTime = System.currentTimeMillis();        
         String trainingDir = "C:\\trainingImages2";
-        //Mat testImage = imread("C:\\denis-14.png", CV_LOAD_IMAGE_GRAYSCALE);
-//if ((new File("result_train.xml")).exists()) {
-//	System.out.println("\ngood");
-//} else {
-//	System.out.println("\nBad");
-//}
-
         File root = new File(trainingDir);
 
         FilenameFilter imgFilter = new FilenameFilter() {
