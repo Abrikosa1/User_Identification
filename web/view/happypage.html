@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Profile</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!------ Include the above in your HEAD tag ---------->
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"> 
+         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link href="../lib/css/style.css" rel="stylesheet">
+        <script src="../controllers/UserController.js"></script>
+        <script src="../service/UserService.js"></script>
+    </head>
+    <body>
+        <script>
+            function deleteAccount(id){
+                 if (confirm("Удалить абонента?")) {
+                var userService = new UserService();
+                userService.deleteUserById(id);
+                document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+                document.location.href = "/Diploma/index.html";}
+            }
+            function exitAccount(){
+                 if (confirm("Вы уверены?")) {
+                document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+                document.location.href = "/Diploma/index.html";}
+            }
+            function editClick(id){
+                var editBut = document.getElementById("editButton");
+                editBut.disabled = true;
+                var button = "<div id='editForm'>"+
+                                        "<div class='form-group'>"+
+                                            "<h3 style='text-align: center'>Введите  новые данные</h3>"+
+                                        "</div>"+
+                                        "<div class='form-group'>"+
+                                            "<input type='text' name='username' id='username' tabindex='1' class='form-control' placeholder='логин'>"+
+                                        "</div>"+
+                                        "<div class='form-group'>"+
+                                            "<input type='text' name='firstName' id='firstName' tabindex='1' class='form-control' placeholder='имя'>"+
+                                        "</div>"+
+                                        "<div class='form-group'>"+
+                                            "<input type='text' name='lastName' id='lastName' tabindex='1' class='form-control' placeholder='фамилия'>"+
+
+                                              "<button type='button' id='editButton' class='btn btn-success btn-md pull-left' onclick='editAccount("+id+")'>Принять</button>"+
+                                              "<button type='button' class='btn btn-danger btn-md pull-right' onclick='editCancell();'>Отмена</button>";
+                                      "</div>";
+                var element =document.getElementById("editAcc");
+                element.innerHTML += button;
+            }
+            function editCancell(){
+                var editBut = document.getElementById("editButton");
+                var element = document.getElementById("editForm");
+                element.remove();
+                editBut.removeAttribute('disabled');
+            }
+            function editAccount(id){
+                var login = document.getElementById('username').value;
+                var firstName = document.getElementById('firstName').value;
+                var lastName = document.getElementById('lastName').value;
+                if((login=="")||(firstName=="")||(lastName=="")){alert("Введите все данные");return;}
+                var userService = new UserService();
+                var userData = userService.getUserById(id);
+                var check;
+                var allData = userService.getAllUser();
+                for(var y=0;y<allData.length;y++)
+                {
+                    if ((allData[y].login == login)) {
+                       check = 1;
+                    }
+                }
+                if (check==1)
+                {
+                    alert("Такой логин уже существует!");
+                    return;
+                }
+                var user = {};
+                user.id = id;
+                user.login = login;
+                user.firstName = firstName;
+                user.lastName = lastName;
+                console.log(user.login, user.firstName,user.lastName);
+                var json = JSON.stringify(user);
+                userService.updateUser(json);
+                alert("Аккаунт успешно изменен.");
+                location.reload(); 
+            }
+        </script>
+        <div id="profile"></div>     
+        <script>
+            window.onload = function ()
+                {
+                    var userController = new UserController();
+                    userController.getUserByIdView(getCookie("id"));
+                };
+                function getCookie(name) {
+                var matches = document.cookie.match(new RegExp(
+                  "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+                ));
+                return matches ? decodeURIComponent(matches[1]) : undefined;
+                 }
+        </script>
+        <script src="../lib/js/jquery.min.js"></script>
+        <script src="../lib/js/bootstrap.min.js"></script>
+    </body>
+</html>

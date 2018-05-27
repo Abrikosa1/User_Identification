@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>FaceRecognizer</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--<link href="lib/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="lib/css/bootstrap-theme.css" type="text/css"/>-->
+        <link href="lib/css/style.css" rel="stylesheet">
+        <script src="controllers/UserController.js"></script>
+        <script src="service/UserService.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+                <script>
+            $(function () {
+
+                $('#login-form-link').click(function (e) {
+                    $("#login-form").delay(100).fadeIn(100);
+                    $("#register-form").fadeOut(100);
+                    $('#register-form-link').removeClass('active');
+                    $(this).addClass('active');
+                    e.preventDefault();
+                });
+                $('#register-form-link').click(function (e) {
+                    $("#register-form").delay(100).fadeIn(100);
+                    $("#login-form").fadeOut(100);
+                    $('#login-form-link').removeClass('active');
+                    $(this).addClass('active');
+                    e.preventDefault();
+                });
+
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="panel panel-login">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <a href="#" class="active" id="login-form-link">Авторизация</a>
+                                </div>
+                                <div class="col-xs-6">
+                                    <a href="#" id="register-form-link">Регистрация</a>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div id="login-form" style="display: block;">
+                                        <div class="form-group">
+                                            <h3 style="text-align: center">Введите логин</h3>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="логин">
+                                        </div>
+                                        <div class="form-group">
+                                            <h3 style="text-align: center">Активируйте камеру, встаньте ровно перед камерой и нажмите кнопку "Войти"</h3>
+                                        </div> 
+                                        <div class="form-group">
+                                            <button tabindex="4" id="camOn2" class="form-control btn btn-primary" onclick="cameraOn2()">Включить камеру</button>
+                                        </div>
+                                        <div class="form-group" id="camOff2" style="display: none;">
+                                            <button tabindex="4"  class="form-control btn btn-primary" onclick="cameraOff2()">Выключить камеру</button>
+                                        </div>
+                                        <div class="form-group">
+                                            <video id="video2" width="0" height="0" autoplay="autoplay"></video>
+                                        </div>
+                                        <div class="form-group">
+                                            <canvas id="logCanvas" width="0" height="0"></canvas>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-6 col-sm-offset-3">
+                                                    <button id="login-load" class="form-control btn btn-login" style="display: none"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Войти</button>
+                                                    <button id="login-submit" tabindex="4" class="form-control btn btn-login" onclick="login();">Войти</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="register-form" style="display: none;">
+                                        <div class="form-group">
+                                            <h3 style="text-align: center">Введите свои данные</h3>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" name="username" id="username2" tabindex="1" class="form-control" placeholder="логин">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" name="firstName" id="firstName" tabindex="1" class="form-control" placeholder="имя">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" name="lastName" id="lastName" tabindex="1" class="form-control" placeholder="фамилия">
+                                        </div>
+                                        <div class="form-group">
+                                            <h3 style="text-align: center">Активируйте камеру, встаньте ровно перед камерой и нажмите кнопку "Создать аккаунт"</h3>
+                                        </div> 
+                                        <div class="form-group">
+                                            <button tabindex="4" id="camOn" class="form-control btn btn-primary" onclick="cameraOn()">Включить камеру</button>
+                                        </div>
+                                        <div class="form-group" id="camOff" style="display: none;">
+                                            <button tabindex="4"  class="form-control btn btn-primary" onclick="cameraOff()">Выключить камеру</button>
+                                        </div>
+                                        <div class="form-group">
+                                            <video id="video" width="0" height="0" autoplay="autoplay"></video>
+                                        </div>
+                                        <div class="form-group">
+                                            <canvas id="canvas2" width="0" height="0"></canvas>
+                                        </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-sm-6 col-sm-offset-3">
+                                                        <button id="register-load" class="form-control btn btn-register" style="display: none;"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Создать аккаунт</button>
+                                                        <button name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" onclick="register();">Создать аккаунт</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Сообщение</h4>
+      </div>
+      <div class="modal-body">
+       Успешно.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+        <button type="button" class="btn btn-primary">Сохранить изменения</button>
+      </div>
+    </div>
+  </div>
+</div>
+        <script type="text/javascript">
+            window.onload = function(){
+                //$('#myModal').modal('show'); 
+                document.getElementById('logCanvas').style.display = 'none';
+                document.getElementById('canvas2').style.display = 'none';
+                document.getElementById('video').style.display = 'none';
+                document.getElementById('video2').style.display = 'none';
+            }
+            var video  = document.getElementById('video'),
+            video2 = document.getElementById('video2'),
+            regBut = document.getElementById('register-submit'),
+            logBut = document.getElementById('login-submit');
+            var canvas2 = document.getElementById('canvas2'),
+            logCanvas = document.getElementById('logCanvas');
+            logCtx = logCanvas.getContext('2d');
+              var ctx = canvas2.getContext('2d');
+              ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+            //context2 = canvas2.getContext('2d');
+            var regStream;
+            var logStream;
+            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+		window.URL.createObjectURL = window.URL.createObjectURL || window.URL.webkitCreateObjectURL || window.URL.mozCreateObjectURL || window.URL.msCreateObjectURL;
+        function cameraOn(){
+            document.getElementById('video').style.display = 'block';
+            document.getElementById('camOn').style.display = 'none';
+            document.getElementById('camOff').style.display = 'block';
+            video.width = 512;
+            video.height = 384;
+        navigator.getUserMedia({video: true}, function(stream) {
+          video.srcObject = stream;
+          regStream = stream;
+        }, function(){
+          
+        });
+    }
+    function cameraOff(){
+            document.getElementById('camOn').style.display = 'block';
+            document.getElementById('camOff').style.display = 'none';
+            document.getElementById('video').style.display = 'none';
+            video.width = 0;
+            video.height = 0;
+            regStream.getVideoTracks()[0].stop();
+    }
+     function cameraOn2(){
+         document.getElementById('video2').style.display = 'block';
+         document.getElementById('camOn2').style.display = 'none';
+            document.getElementById('camOff2').style.display = 'block';
+            video2.width = 512;
+            video2.height = 384;
+        navigator.getUserMedia({video: true}, function(stream) {
+          video2.srcObject = stream;
+          logStream = stream;
+        }, function(){
+          
+        });
+    }
+    function cameraOff2(){
+        document.getElementById('camOn2').style.display = 'block';
+            document.getElementById('camOff2').style.display = 'none';
+            document.getElementById('video2').style.display = 'none';
+            video2.width = 0;
+            video2.height = 0;
+            logStream.getVideoTracks()[0].stop();
+    }
+            function convertToCleanBase64(imageData) {
+                var BASE64_MARKER = ';base64,';
+                var base64Index = imageData.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+                var base64Image = imageData.substring(base64Index);
+                return base64Image;
+            }
+            function register(){
+                if(video.width !== 512){alert("Сперва включите камеру!");return;}
+                var login = document.getElementById('username2').value;
+                var firstName = document.getElementById('firstName').value;
+                var lastName = document.getElementById('lastName').value;
+                if((login=="")||(firstName=="")||(lastName=="")){alert("Введите все данные");return;}
+                var check;
+                var userService = new UserService();
+                var data = userService.getAllUser();
+                console.log(data[0].login);
+                for(var y=0;y<data.length;y++)
+                {
+                    if ((data[y].login == login)) {
+                       check = 1;
+                    }
+                }
+                if (check==1)
+                {
+                    alert("Такой пользователь уже существует!");
+                    return;
+                }
+                //document.getElementById('register-load').style.display = 'block';
+                //document.getElementById('register-submit').style.display = 'none';
+                var start, stop;
+                start = (new Date()).getTime();
+                var i = 20;
+                 var array = new Array;
+                 regBut.disabled = true;
+               var intr = setInterval(
+                        function () {
+                            if (i == 0) {
+                                var userService = new UserService();
+                                var data = userService.getLastId();
+                                var id = data.id;
+                                console.log(id);
+                                clearInterval(intr);
+                                stop = (new Date()).getTime();
+                                //alert(stop - start);
+                                var imgArray = JSON.stringify(array);
+                                var image = canvas2.toDataURL('image/png');
+                                var base64Image = convertToCleanBase64(image);
+                                var base64 = base64Image;
+                                var user = {};
+                                user.id = id+1;
+                                user.login = login;
+                                user.image = base64;
+                                user.imgArray = imgArray;
+                                user.firstName = firstName;
+                                user.lastName = lastName;
+                                var json = JSON.stringify(user);
+                                var userService = new UserService();
+                                userService.insertUser(json);
+                                regBut.removeAttribute('disabled');
+                                //document.getElementById('register-load').style.display = 'none';
+                                //document.getElementById('register-submit').style.display = 'block';
+                                return;
+                            }
+                            var img = document.createElement('img');
+                            canvas2.width = 512;
+                            canvas2.height = 384;
+                            ctx.drawImage(video, 0, 0, canvas2.width, canvas2.height);
+                            img.src = canvas2.toDataURL('image/png');
+                            img.width = video.offsetWidth;
+                            img.height = video.offsetHeight;
+                            var rr = convertToCleanBase64(img.src);
+                            //var imgData=context.createImageData(img);
+                            //console.log(rr);
+                            array.push(rr);
+                            i--;
+                        },
+                        20
+                        );
+                  // через 5 сек остановить повторы
+                 // setTimeout(function() {
+                   // clearInterval(intr);
+                    //alert( 'стоп' );
+                  //}, 5000);
+                  //console.log(array);
+                  
+            }
+            function load(){
+                document.getElementById('login-submit').style.display = 'none';
+                document.getElementById('login-load').style.display = 'block';
+                logBut.disabled = true;
+            }
+            function nonload(){
+                document.getElementById('login-submit').style.display = 'block';
+                document.getElementById('login-load').style.display = 'none';
+            }
+            function login(){
+                if(video2.width !== 512){alert("Сперва включите камеру!");return;}
+                var login = document.getElementById('username').value;                        
+                if(login==""){alert("Введите логин!");return;}
+                var check = 0;
+                var userLog;
+                var id;
+                var userService = new UserService();
+                var data = userService.getAllUser();
+                for(var y=0;y<data.length;y++)
+                {
+                    if (data[y].login == login) {
+                        userLog = data[y].login;
+                        id = data[y].id;
+                       check = 1;
+                    };
+                };
+                if (check==0)
+                {
+                    alert("Такого пользователя не существует!");
+                    return;
+                };
+                var img = document.createElement('img');
+                logCanvas.width = 512;
+                logCanvas.height = 384;
+                logCtx.drawImage(video2, 0, 0, logCanvas.width, logCanvas.height);
+                img.src = logCanvas.toDataURL('image/png');
+                img.width = video2.offsetWidth;
+                img.height = video2.offsetHeight;
+                var base64 = convertToCleanBase64(img.src);
+                var user = {};
+                user.id = id;
+                user.login = userLog;
+                user.image = base64;
+                var json = JSON.stringify(user);
+                var userService = new UserService();
+                var controlId = userService.recognizeUser(json);
+                console.log(id);
+                console.log(controlId);
+                if(controlId == id){
+                document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+                document.cookie = "id=" + id+";path=/";
+                document.location.href = "/Diploma/view/happypage.html";  
+        }
+                else{alert("Чёт как-то не!");
+                document.getElementById('login-load').style.display = 'none';
+                document.getElementById('login-submit').style.display = 'block';
+                logBut.removeAttribute('disabled');
+                return;};
+            }
+          function cutImg(){
+              var userController = new UserController();
+              userController.getAllUserView();
+              //canvas2.width = 512;
+              //canvas2.height = 384;
+              //ctx.drawImage(video, 0, 0,512,384);
+              //faces = detectFaces();
+              //console.log(faces);
+              //drawMasks(faces); 
+          }
+          /*function detectFaces() {
+              return ccv.detect_objects({canvas : (ccv.pre(canvas2)), cascade: cascade, interval: 1, min_neighbors: 0.5});
+          }
+          function drawMasks(faces) {
+                                if(!faces) {
+                                    return false;
+                                }
+
+                                for (var i = 0; i < faces.length; i++) {
+                                    var face = faces[i];
+                                    ctx.strokeRect(face.x, face.y, face.width, face.height);
+                                    
+                                }*/
+                            
+    
+        </script>
+        <!--  ================================================== -->
+        <script src="lib/js/jquery.min.js"></script>
+        <script src="lib/js/bootstrap.min.js"></script>
+       <!-- <script type="text/javascript" src="lib/ccv.js"></script>
+        <script type="text/javascript" src="lib/face.js"></script>-->
+        <script>
+        </script>
+    </body>
+</html>
